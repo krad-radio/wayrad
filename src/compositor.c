@@ -1142,6 +1142,8 @@ weston_output_repaint(struct weston_output *output, uint32_t msecs)
 	pixman_region32_t opaque, output_damage, new_damage;
 	int32_t width, height;
 
+	int ok;
+
 	weston_compositor_update_drag_surfaces(ec);
 
 	width = output->current->width +
@@ -1154,14 +1156,34 @@ weston_output_repaint(struct weston_output *output, uint32_t msecs)
 	wl_list_init(&ec->surface_list);
 	wl_list_init(&frame_callback_list);
 	wl_list_for_each(layer, &ec->layer_list, link) {
-		wl_list_for_each(es, &layer->surface_list, layer_link) {
-			weston_surface_update_transform(es);
-			wl_list_insert(ec->surface_list.prev, &es->link);
-			if (es->output == output) {
-				wl_list_insert_list(&frame_callback_list,
-						    &es->frame_callback_list);
-				wl_list_init(&es->frame_callback_list);
+	
+		if (&ec->cursor_layer == layer) {
+
+			clock_gettime(CLOCK_MONOTONIC, &ec->current_time);
+
+			
+			if ((ec->current_time.tv_sec - ec->last_motion.tv_sec) > 5) {
+				ok = 0;
+			} else {
+				ok = 1;
 			}
+			
+		} else {
+			ok = 1;
+		}
+	
+		if (ok) {
+	
+			wl_list_for_each(es, &layer->surface_list, layer_link) {
+				weston_surface_update_transform(es);
+				wl_list_insert(ec->surface_list.prev, &es->link);
+				if (es->output == output) {
+					wl_list_insert_list(&frame_callback_list,
+								&es->frame_callback_list);
+					wl_list_init(&es->frame_callback_list);
+				}
+			}
+		
 		}
 	}
 
@@ -1750,6 +1772,10 @@ notify_motion(struct weston_seat *seat, uint32_t time, wl_fixed_t x, wl_fixed_t 
 	struct weston_output *output;
 	struct wl_pointer *pointer = seat->seat.pointer;
 	int32_t ix, iy;
+
+
+	clock_gettime(CLOCK_MONOTONIC, &ec->last_motion);
+
 
 	weston_compositor_activity(ec);
 
@@ -3474,7 +3500,7 @@ int main(int argc, char *argv[])
 	char *shell = NULL;
 	char *module = NULL;
 	char *log = NULL;
-	int32_t idle_time = 300;
+	int32_t idle_time = 2147483647;
 	int32_t xserver = 0;
 	int32_t help = 0;
 	char *socket_name = NULL;

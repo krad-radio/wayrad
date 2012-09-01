@@ -121,7 +121,7 @@ create_window(struct display *display, int width, int height)
 	window = malloc(sizeof *window);
 
 	window->buffer = create_shm_buffer(display,
-					   width, height,
+					   132, 132,
 					   WL_SHM_FORMAT_XRGB8888,
 					   &window->shm_data);
 
@@ -208,7 +208,7 @@ redraw(void *data, struct wl_callback *callback, uint32_t time)
 {
 	struct window *window = data;
 
-	paint_pixels(window->shm_data, window->width, window->height, time);
+	//paint_pixels(window->shm_data, window->width, window->height, time);
 	wl_surface_attach(window->surface, window->buffer, 0, 0);
 	wl_surface_damage(window->surface,
 			  0, 0, window->width, window->height);
@@ -321,7 +321,7 @@ main(int argc, char **argv)
 	struct window *window;
 
 	display = create_display();
-	window = create_window(display, 250, 250);
+	window = create_window(display, 0, 0);
 	if (!window)
 		return 1;
 

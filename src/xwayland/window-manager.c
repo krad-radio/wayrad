@@ -393,6 +393,14 @@ weston_wm_window_get_child_position(struct weston_wm_window *window,
 {
 	struct theme *t = window->wm->theme;
 
+	if ((window->width == 1280) && (window->height == 720)) {
+		*x = 0;
+		*y = 0;
+		window->decorate = 0;
+		return;
+	}
+
+
 	if (window->decorate) {
 		*x = t->margin + t->width;
 		*y = t->margin + t->titlebar_height;

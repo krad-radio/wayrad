@@ -259,7 +259,7 @@ panel_redraw_handler(struct widget *widget, void *data)
 	cr = cairo_create(surface);
 	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 	set_hex_color(cr, key_panel_color);
-	cairo_paint(cr);
+	//cairo_paint(cr);
 
 	cairo_destroy(cr);
 	cairo_surface_destroy(surface);
@@ -346,11 +346,11 @@ panel_clock_redraw_handler(struct widget *widget, void *data)
 	cairo_move_to(cr, allocation.x + 5,
 		      allocation.y + 3 * (allocation.height >> 2) + 1);
 	cairo_set_source_rgb(cr, 0, 0, 0);
-	cairo_show_text(cr, string);
+	//cairo_show_text(cr, string);
 	cairo_move_to(cr, allocation.x + 4,
 		      allocation.y + 3 * (allocation.height >> 2));
 	cairo_set_source_rgb(cr, 1, 1, 1);
-	cairo_show_text(cr, string);
+	//cairo_show_text(cr, string);
 	cairo_destroy(cr);
 }
 
@@ -444,7 +444,7 @@ panel_configure(void *data,
 	struct surface *surface = window_get_user_data(window);
 	struct panel *panel = container_of(surface, struct panel, base);
 
-	window_schedule_resize(panel->window, width, 32);
+	window_schedule_resize(panel->window, width, 0);
 }
 
 static struct panel *

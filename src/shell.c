@@ -1171,6 +1171,14 @@ shell_surface_set_title(struct wl_client *client,
 
 	free(shsurf->title);
 	shsurf->title = strdup(title);
+	
+	printf("hell its %s\n", title);
+	
+	if (strstr(shsurf->title, "plugin-container") != NULL) {
+		weston_surface_set_position (shsurf->surface, 0, 0);
+	}
+	
+	
 }
 
 static void
@@ -2636,6 +2644,19 @@ weston_surface_set_initial_position (struct weston_surface *surface,
 	y = target_output->y + dy;
 
 	weston_surface_set_position (surface, x, y);
+	
+	
+	struct shell_surface *shsurf = get_shell_surface(surface);
+	
+	if (shsurf->title != NULL) {
+		printf("me here is m %s\n", shsurf->title);
+	
+		if (strstr(shsurf->title, "plugin-container") != NULL) {
+			weston_surface_set_position (shsurf->surface, 0, 0);
+		}
+		
+	}
+	
 }
 
 static void
@@ -2678,6 +2699,15 @@ map(struct desktop_shell *shell, struct weston_surface *surface,
 		break;
 	default:
 		;
+	}
+
+	if (shsurf->title != NULL) {
+	
+		printf("hi i am %s\n", shsurf->title);
+	
+		if (strstr(shsurf->title, "plugin-container") != NULL) {
+			weston_surface_set_position (shsurf->surface, 0, 0);
+		}
 	}
 
 	/* surface stacking order, see also activate() */

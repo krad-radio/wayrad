@@ -297,6 +297,11 @@ struct weston_compositor {
 	struct weston_layer fade_layer;
 	struct weston_layer cursor_layer;
 
+	struct timespec last_motion;
+	struct timespec current_time;
+
+
+
 	struct wl_list output_list;
 	struct wl_list seat_list;
 	struct wl_list layer_list;
